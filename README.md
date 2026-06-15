@@ -1,199 +1,95 @@
-# Handwritten Digit Recognition using Deep Learning
+# Handwritten Digit Recognition
 
-## Overview
+A deep learning solution for the Kaggle Digit Recognizer competition using TensorFlow and Keras.
 
-This project solves the Kaggle Digit Recognizer competition using a Deep Neural Network (DNN) built with TensorFlow and Keras.
+## Competition
 
-The model is trained on the MNIST dataset, which contains 28×28 grayscale images of handwritten digits (0–9). The goal is to correctly classify each image into its corresponding digit.
+Kaggle Competition: Digit Recognizer
 
----
+Notebook Link: https://www.kaggle.com/code/kishankushavaha/handwritten-digit-recognition
+
+## Problem Statement
+
+The goal is to identify handwritten digits (0–9) from grayscale images of size 28×28 pixels. The dataset is based on the MNIST handwritten digit database.
 
 ## Dataset
 
-The dataset consists of:
+* Training Samples: 42,000
+* Test Samples: 28,000
+* Features: 784 pixel values per image
+* Classes: 10 digits (0–9)
 
-* **train.csv**
+## Approach
 
-  * 42,000 training examples
-  * 784 pixel features
-  * 1 target column (`label`)
+### Data Preprocessing
 
-* **test.csv**
+* Loaded train and test datasets
+* Separated features and labels
+* Normalized pixel values by dividing by 255
+* Split training data into training and validation sets
 
-  * 28,000 testing examples
-  * 784 pixel features
-
-Each image contains:
-
-* Size: 28 × 28 pixels
-* Total Features: 784
-* Pixel values range from 0 to 255
-
----
-
-## Technologies Used
-
-* Python
-* NumPy
-* Pandas
-* TensorFlow
-* Keras
-* Scikit-learn
-
----
-
-## Project Workflow
-
-### 1. Load Dataset
+### Model Architecture
 
 ```python
-train = pd.read_csv("train.csv")
-test = pd.read_csv("test.csv")
+Input Layer (784)
+
+Dense(128, activation='relu')
+
+Dense(64, activation='relu')
+
+Dense(10, activation='softmax')
 ```
 
-### 2. Separate Features and Labels
+### Training Configuration
 
-```python
-X = train.drop("label", axis=1)
-y = train["label"]
-```
-
-### 3. Normalize Data
-
-Pixel values are scaled between 0 and 1.
-
-```python
-X = X / 255.0
-test = test / 255.0
-```
-
-### 4. Train-Validation Split
-
-```python
-from sklearn.model_selection import train_test_split
-
-X_train, X_valid, y_train, y_valid = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-```
-
-### 5. Build Neural Network
-
-Architecture:
-
-Input Layer (784 neurons)
-↓
-Dense Layer (128 neurons, ReLU)
-↓
-Dense Layer (64 neurons, ReLU)
-↓
-Output Layer (10 neurons, Softmax)
-
-```python
-model = Sequential()
-
-model.add(Dense(128, activation="relu", input_shape=(784,)))
-model.add(Dense(64, activation="relu"))
-model.add(Dense(10, activation="softmax"))
-```
-
-### 6. Compile Model
-
-```python
-model.compile(
-    optimizer="adam",
-    loss="sparse_categorical_crossentropy",
-    metrics=["accuracy"]
-)
-```
-
-### 7. Train Model
-
-```python
-history = model.fit(
-    X_train,
-    y_train,
-    epochs=10,
-    validation_data=(X_valid, y_valid)
-)
-```
-
-### 8. Evaluate Model
-
-```python
-loss, accuracy = model.evaluate(X_valid, y_valid)
-```
-
-Validation Accuracy:
-
-**97.07%**
-
----
-
-## Generate Predictions
-
-```python
-pred = model.predict(test)
-pred = np.argmax(pred, axis=1)
-```
-
----
-
-## Create Submission File
-
-```python
-submission = pd.DataFrame({
-    "ImageId": range(1, len(pred) + 1),
-    "Label": pred
-})
-
-submission.to_csv("submission.csv", index=False)
-```
-
-Generated file:
-
-```text
-submission.csv
-```
-
-Format:
-
-| ImageId | Label |
-| ------- | ----- |
-| 1       | 2     |
-| 2       | 0     |
-| 3       | 9     |
-| ...     | ...   |
-
----
+* Optimizer: Adam
+* Loss Function: Sparse Categorical Crossentropy
+* Epochs: 10
+* Validation Split: 20%
 
 ## Results
 
-| Metric              | Value                           |
-| ------------------- | ------------------------------- |
-| Training Samples    | 42,000                          |
-| Test Samples        | 28,000                          |
-| Epochs              | 10                              |
-| Optimizer           | Adam                            |
-| Loss Function       | Sparse Categorical Crossentropy |
-| Validation Accuracy | 97.07%                          |
+| Metric              | Value  |
+| ------------------- | ------ |
+| Validation Accuracy | 97.07% |
+| Validation Loss     | 0.1212 |
 
----
+## Submission
 
-## Future Improvements
+Predictions were generated on the test dataset and saved in the required Kaggle submission format:
 
-* Add Dropout layers to reduce overfitting.
-* Use Convolutional Neural Networks (CNNs).
-* Implement Data Augmentation.
-* Apply Learning Rate Scheduling.
-* Perform Hyperparameter Tuning.
+```text
+ImageId,Label
+1,2
+2,0
+3,9
+...
+```
 
----
+## Libraries Used
 
-## Author
+* NumPy
+* Pandas
+* Scikit-learn
+* TensorFlow
+* Keras
 
-**Kishan**
+## Run the Notebook
 
-M.Tech Student
-Subject Matter Expert (Mathematics)
-Interested in Machine Learning, Deep Learning, Generative AI, and Cyber Security.
+1. Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+2. Install dependencies
+
+```bash
+pip install numpy pandas scikit-learn tensorflow
+```
+
+3. Open the notebook and run all cells.
+
+## Kaggle Notebook
+
+https://www.kaggle.com/code/kishankushavaha/handwritten-digit-recognition
